@@ -1,0 +1,1289 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 71,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "-- Mixed --"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto",
+              "wrapText": false
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Overage"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "applyToRow": false,
+                  "mode": "gradient",
+                  "type": "color-background",
+                  "wrapText": false
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "super-light-green",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 29,
+        "w": 19,
+        "x": 0,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": false,
+          "fields": [],
+          "reducer": [
+            "sum"
+          ],
+          "show": true
+        },
+        "frameIndex": 0,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "Customer Name"
+          }
+        ]
+      },
+      "pluginVersion": "11.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ae5wpbbz06ygwc"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM (\n  SELECT\n    'AFCA' AS customer_name,\n    licname,\n    unitofmeasuretype,\n    prepayquantity,\n    prepayquantity AS \"Contracted\",\n    usagequantity,\n    usagequantity - prepayquantity AS Overage,\n    startdate::text,\n    enddate::text,\n    to_char(date_trunc('month', startdate + (enddate - startdate) / 2), 'FMMonth, YYYY') AS \"Month, Year\"\n  FROM suboverviewdata\n  WHERE $__timeFilter(enddate)\n    AND ($var_alldata = true OR (usagequantity - prepayquantity) > 0)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\n) AS subquery\nWHERE\n  ('${partner:raw}' IN ('All','') OR customer_name LIKE REPLACE('${partner:raw}', '\\\\', '') || '/%')\n  AND ('${customerName}' = 'All' OR customer_name = '${customerName}')\nORDER BY enddate, licname;",
+          "refId": "afca"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "bdqpk071i1728d"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM (\n  SELECT\n    'QPC/Anglicare' AS customer_name,\n    licname,\n    unitofmeasuretype,\n    prepayquantity,\n    prepayquantity AS \"Contracted\",\n    usagequantity,\n    usagequantity - prepayquantity AS Overage,\n    startdate::text,\n    enddate::text,\n    to_char(date_trunc('month', startdate + (enddate - startdate) / 2), 'FMMonth, YYYY') AS \"Month, Year\"\n  FROM suboverviewdata\n  WHERE $__timeFilter(enddate)\n    AND ($var_alldata = true OR (usagequantity - prepayquantity) > 0)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\n) AS subquery\nWHERE\n  ('${partner:raw}' IN ('All','') OR customer_name LIKE REPLACE('${partner:raw}', '\\\\', '') || '/%')\n  AND ('${customerName}' = 'All' OR customer_name = '${customerName}')\nORDER BY enddate, licname;",
+          "refId": "Anglicare"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cdgrx7c15i7lsd"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM (\n  SELECT\n    'Deakin' AS customer_name,\n    licname,\n    unitofmeasuretype,\n    prepayquantity,\n    prepayquantity AS \"Contracted\",\n    usagequantity,\n    usagequantity - prepayquantity AS Overage,\n    startdate::text,\n    enddate::text,\n    to_char(date_trunc('month', startdate + (enddate - startdate) / 2), 'FMMonth, YYYY') AS \"Month, Year\"\n  FROM suboverviewdata\n  WHERE $__timeFilter(enddate)\n    AND ($var_alldata = true OR (usagequantity - prepayquantity) > 0)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\n) AS subquery\nWHERE\n  ('${partner:raw}' IN ('All','') OR customer_name LIKE REPLACE('${partner:raw}', '\\\\', '') || '/%')\n  AND ('${customerName}' = 'All' OR customer_name = '${customerName}')\nORDER BY enddate, licname;",
+          "refId": "deakin"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "de5wqf53sh5vkb"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM (\n  SELECT\n    'JLL' AS customer_name,\n    licname,\n    unitofmeasuretype,\n    prepayquantity,\n    prepayquantity AS \"Contracted\",\n    usagequantity,\n    usagequantity - prepayquantity AS Overage,\n    startdate::text,\n    enddate::text,\n    to_char(date_trunc('month', startdate + (enddate - startdate) / 2), 'FMMonth, YYYY') AS \"Month, Year\"\n  FROM suboverviewdata\n  WHERE $__timeFilter(enddate)\n    AND ($var_alldata = true OR (usagequantity - prepayquantity) > 0)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\n) AS subquery\nWHERE\n  ('${partner:raw}' IN ('All','') OR customer_name LIKE REPLACE('${partner:raw}', '\\\\', '') || '/%')\n  AND ('${customerName}' = 'All' OR customer_name = '${customerName}')\nORDER BY enddate, licname;",
+          "refId": "JLL"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "edwqkoupsohs0f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM (\n  SELECT\n    'Luxury Escapes' AS customer_name,\n    licname,\n    unitofmeasuretype,\n    prepayquantity,\n    prepayquantity AS \"Contracted\",\n    usagequantity,\n    usagequantity - prepayquantity AS Overage,\n    startdate::text,\n    enddate::text,\n    to_char(date_trunc('month', startdate + (enddate - startdate) / 2), 'FMMonth, YYYY') AS \"Month, Year\"\n  FROM suboverviewdata\n  WHERE $__timeFilter(enddate)\n    AND ($var_alldata = true OR (usagequantity - prepayquantity) > 0)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\n) AS subquery\nWHERE\n  ('${partner:raw}' IN ('All','') OR customer_name LIKE REPLACE('${partner:raw}', '\\\\', '') || '/%')\n  AND ('${customerName}' = 'All' OR customer_name = '${customerName}')\nORDER BY enddate, licname;",
+          "refId": "Luxury Escapes"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ae5wnr5t9vmdcf"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM (\n  SELECT\n    'QPC/PICA' AS customer_name,\n    licname,\n    unitofmeasuretype,\n    prepayquantity,\n    prepayquantity AS \"Contracted\",\n    usagequantity,\n    usagequantity - prepayquantity AS Overage,\n    startdate::text,\n    enddate::text,\n    to_char(date_trunc('month', startdate + (enddate - startdate) / 2), 'FMMonth, YYYY') AS \"Month, Year\"\n  FROM suboverviewdata\n  WHERE $__timeFilter(enddate)\n    AND ($var_alldata = true OR (usagequantity - prepayquantity) > 0)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\n) AS subquery\nWHERE\n  ('${partner:raw}' IN ('All','') OR customer_name LIKE REPLACE('${partner:raw}', '\\\\', '') || '/%')\n  AND ('${customerName}' = 'All' OR customer_name = '${customerName}')\nORDER BY enddate, licname;",
+          "refId": "PICA",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "adoq5ssgi1b0gb"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM (\n  SELECT\n    'QPC/Superloop' AS customer_name,\n    licname,\n    unitofmeasuretype,\n    prepayquantity,\n    prepayquantity AS \"Contracted\",\n    usagequantity,\n    usagequantity - prepayquantity AS Overage,\n    startdate::text,\n    enddate::text,\n    to_char(date_trunc('month', startdate + (enddate - startdate) / 2), 'FMMonth, YYYY') AS \"Month, Year\"\n  FROM suboverviewdata\n  WHERE $__timeFilter(enddate)\n    AND ($var_alldata = true OR (usagequantity - prepayquantity) > 0)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\n) AS subquery\nWHERE\n  ('${partner:raw}' IN ('All','') OR customer_name LIKE REPLACE('${partner:raw}', '\\\\', '') || '/%')\n  AND ('${customerName}' = 'All' OR customer_name = '${customerName}')\nORDER BY enddate, licname;",
+          "refId": "superloop"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ddwr43xciv2f4c"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM (\n  SELECT\n    'QPC/UniSuper' AS customer_name,\n    licname,\n    unitofmeasuretype,\n    prepayquantity,\n    prepayquantity AS \"Contracted\",\n    usagequantity,\n    usagequantity - prepayquantity AS Overage,\n    startdate::text,\n    enddate::text,\n    to_char(date_trunc('month', startdate + (enddate - startdate) / 2), 'FMMonth, YYYY') AS \"Month, Year\"\n  FROM suboverviewdata\n  WHERE $__timeFilter(enddate)\n    AND ($var_alldata = true OR (usagequantity - prepayquantity) > 0)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\n) AS subquery\nWHERE\n  ('${partner:raw}' IN ('All','') OR customer_name LIKE REPLACE('${partner:raw}', '\\\\', '') || '/%')\n  AND ('${customerName}' = 'All' OR customer_name = '${customerName}')\nORDER BY enddate, licname;",
+          "refId": "UniSuper"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ee5wr8qj5upz4f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM (\n  SELECT\n    'QPC/MYOB' AS customer_name,\n    licname,\n    unitofmeasuretype,\n    prepayquantity,\n    CASE\n      WHEN startdate between '2025-01-01' and '2025-12-31'  THEN '420'\n      ELSE prepayquantity\n    END AS \"Contracted\",\n    usagequantity,\n    usagequantity - prepayquantity AS Overage,\n    startdate::text,\n    enddate::text,\n    to_char(date_trunc('month', startdate + (enddate - startdate) / 2), 'FMMonth, YYYY') AS \"Month, Year\"\n  FROM suboverviewdata\n  WHERE $__timeFilter(enddate)\n    AND ($var_alldata = true OR (usagequantity - prepayquantity) > 0)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\n) AS subquery\nWHERE\n  ('${partner:raw}' IN ('All','') OR customer_name LIKE REPLACE('${partner:raw}', '\\\\', '') || '/%')\n  AND ('${customerName}' = 'All' OR customer_name = '${customerName}')\nORDER BY enddate, licname;\n",
+          "refId": "MYOB",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ae622ng7bez28e"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM (\n  SELECT\n    'Compassion' AS customer_name,\n    licname,\n    unitofmeasuretype,\n    prepayquantity,\n    prepayquantity AS \"Contracted\",\n    usagequantity,\n    usagequantity - prepayquantity AS Overage,\n    startdate::text,\n    enddate::text,\n    to_char(date_trunc('month', startdate + (enddate - startdate) / 2), 'FMMonth, YYYY') AS \"Month, Year\"\n  FROM suboverviewdata\n  WHERE $__timeFilter(enddate)\n    AND ($var_alldata = true OR (usagequantity - prepayquantity) > 0)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\n) AS subquery\nWHERE\n  ('${partner:raw}' IN ('All','') OR customer_name LIKE REPLACE('${partner:raw}', '\\\\', '') || '/%')\n  AND ('${customerName}' = 'All' OR customer_name = '${customerName}')\nORDER BY enddate, licname;",
+          "refId": "compassion"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "de624vkf17tvke"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM (\n  SELECT\n    'QPC/BAT APAC' AS customer_name,\n    licname,\n    unitofmeasuretype,\n    prepayquantity,\n    prepayquantity AS \"Contracted\",\n    usagequantity,\n    usagequantity - prepayquantity AS Overage,\n    startdate::text,\n    enddate::text,\n    to_char(date_trunc('month', startdate + (enddate - startdate) / 2), 'FMMonth, YYYY') AS \"Month, Year\"\n  FROM suboverviewdata\n  WHERE $__timeFilter(enddate)\n    AND ($var_alldata = true OR (usagequantity - prepayquantity) > 0)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\n) AS subquery\nWHERE\n  ('${partner:raw}' IN ('All','') OR customer_name LIKE REPLACE('${partner:raw}', '\\\\', '') || '/%')\n  AND ('${customerName}' = 'All' OR customer_name = '${customerName}')\nORDER BY enddate, licname;",
+          "refId": "batapac"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "be625522r8oaod"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM (\n  SELECT\n    'QPC/BAT Pakistan' AS customer_name,\n    licname,\n    unitofmeasuretype,\n    prepayquantity,\n    '25' AS \"Contracted\",\n    usagequantity,\n    usagequantity - prepayquantity AS Overage,\n    startdate::text,\n    enddate::text,\n    to_char(date_trunc('month', startdate + (enddate - startdate) / 2), 'FMMonth, YYYY') AS \"Month, Year\"\n  FROM suboverviewdata\n  WHERE $__timeFilter(enddate)\n    AND ($var_alldata = true OR (usagequantity - prepayquantity) > 0)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\n) AS subquery\nWHERE\n  ('${partner:raw}' IN ('All','') OR customer_name LIKE REPLACE('${partner:raw}', '\\\\', '') || '/%')\n  AND ('${customerName}' = 'All' OR customer_name = '${customerName}')\nORDER BY enddate, licname;",
+          "refId": "batpakistan",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ee625ytbyl62od"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM (\n  SELECT\n    'QPC/Tabcorp' AS customer_name,\n    licname,\n    unitofmeasuretype,\n    prepayquantity,\n    prepayquantity AS \"Contracted\",\n    usagequantity,\n    usagequantity - prepayquantity AS Overage,\n    startdate::text,\n    enddate::text,\n    to_char(date_trunc('month', startdate + (enddate - startdate) / 2), 'FMMonth, YYYY') AS \"Month, Year\"\n  FROM suboverviewdata\n  WHERE $__timeFilter(enddate)\n    AND ($var_alldata = true OR (usagequantity - prepayquantity) > 0)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\n) AS subquery\nWHERE\n  ('${partner:raw}' IN ('All','') OR customer_name LIKE REPLACE('${partner:raw}', '\\\\', '') || '/%')\n  AND ('${customerName}' = 'All' OR customer_name = '${customerName}')\nORDER BY enddate, licname;",
+          "refId": "tabcorp"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ee626n16o8ikgc"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM (\n  SELECT\n    'Datacom/Lite n Easy' AS customer_name,\n    licname,\n    unitofmeasuretype,\n    prepayquantity,\n    prepayquantity AS \"Contracted\",\n    usagequantity,\n    usagequantity - prepayquantity AS Overage,\n    startdate::text,\n    enddate::text,\n    to_char(date_trunc('month', startdate + (enddate - startdate) / 2), 'FMMonth, YYYY') AS \"Month, Year\"\n  FROM suboverviewdata\n  WHERE $__timeFilter(enddate)\n    AND ($var_alldata = true OR (usagequantity - prepayquantity) > 0)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\n) AS subquery\nWHERE\n  ('${partner:raw}' IN ('All','') OR customer_name LIKE REPLACE('${partner:raw}', '\\\\', '') || '/%')\n  AND ('${customerName}' = 'All' OR customer_name = '${customerName}')\nORDER BY enddate, licname;",
+          "refId": "liteneasy"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ee626u59wz9q8b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM (\n  SELECT\n    'QPC/Ricoh Oceania' AS customer_name,\n    licname,\n    unitofmeasuretype,\n    prepayquantity,\n    prepayquantity AS \"Contracted\",\n    usagequantity,\n    usagequantity - prepayquantity AS Overage,\n    startdate::text,\n    enddate::text,\n    to_char(date_trunc('month', startdate + (enddate - startdate) / 2), 'FMMonth, YYYY') AS \"Month, Year\"\n  FROM suboverviewdata\n  WHERE $__timeFilter(enddate)\n    AND ($var_alldata = true OR (usagequantity - prepayquantity) > 0)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\n) AS subquery\nWHERE\n  ('${partner:raw}' IN ('All','') OR customer_name LIKE REPLACE('${partner:raw}', '\\\\', '') || '/%')\n  AND ('${customerName}' = 'All' OR customer_name = '${customerName}')\nORDER BY enddate, licname;",
+          "refId": "ricohoceania",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ednpkxbg2yubkb"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM (\n  SELECT\n    'Datacom/Communities' AS customer_name,\n    licname,\n    unitofmeasuretype,\n    prepayquantity,\n    prepayquantity AS \"Contracted\",\n    usagequantity,\n    usagequantity - prepayquantity AS Overage,\n    startdate::text,\n    enddate::text,\n    to_char(date_trunc('month', startdate + (enddate - startdate) / 2), 'FMMonth, YYYY') AS \"Month, Year\"\n  FROM suboverviewdata\n  WHERE $__timeFilter(enddate)\n    AND ($var_alldata = true OR (usagequantity - prepayquantity) > 0)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\n) AS subquery\nWHERE\n  ('${partner:raw}' IN ('All','') OR customer_name LIKE REPLACE('${partner:raw}', '\\\\', '') || '/%')\n  AND ('${customerName}' = 'All' OR customer_name = '${customerName}')\nORDER BY enddate, licname;",
+          "refId": "Datacom/Communities",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fecwpk1iu4j5sa"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM (\n  SELECT\n    'Brickworks' AS customer_name,\n    licname,\n    unitofmeasuretype,\n    prepayquantity,\n    '50' AS \"Contracted\",\n    usagequantity,\n    usagequantity - prepayquantity AS Overage,\n    startdate::text,\n    enddate::text,\n    to_char(date_trunc('month', startdate + (enddate - startdate) / 2), 'FMMonth, YYYY') AS \"Month, Year\"\n  FROM suboverviewdata\n  WHERE $__timeFilter(enddate)\n    AND ($var_alldata = true OR (usagequantity - prepayquantity) > 0)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\n) AS subquery\nWHERE\n  ('${partner:raw}' IN ('All','') OR customer_name LIKE REPLACE('${partner:raw}', '\\\\', '') || '/%')\n  AND ('${customerName}' = 'All' OR customer_name = '${customerName}')\nORDER BY enddate, licname;",
+          "refId": "Brickworks",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ee628jzcnvx1cf"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM (\n  SELECT\n    'QPC/Compare The Market' AS customer_name,\n    licname,\n    unitofmeasuretype,\n    prepayquantity,\n    prepayquantity AS \"Contracted\",\n    usagequantity,\n    usagequantity - prepayquantity AS Overage,\n    startdate::text,\n    enddate::text,\n    to_char(date_trunc('month', startdate + (enddate - startdate) / 2), 'FMMonth, YYYY') AS \"Month, Year\"\n  FROM suboverviewdata\n  WHERE $__timeFilter(enddate)\n    AND ($var_alldata = true OR (usagequantity - prepayquantity) > 0)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\n) AS subquery\nWHERE\n  ('${partner:raw}' IN ('All','') OR customer_name LIKE REPLACE('${partner:raw}', '\\\\', '') || '/%')\n  AND ('${customerName}' = 'All' OR customer_name = '${customerName}')\nORDER BY enddate, licname;",
+          "refId": "QPC/Compare the market",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fe629x1jsrp4wc"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM (\n  SELECT\n    'Ventia' AS customer_name,\n    licname,\n    unitofmeasuretype,\n    prepayquantity,\n    prepayquantity AS \"Contracted\",\n    usagequantity,\n    usagequantity - prepayquantity AS Overage,\n    startdate::text,\n    enddate::text,\n    to_char(date_trunc('month', startdate + (enddate - startdate) / 2), 'FMMonth, YYYY') AS \"Month, Year\"\n  FROM suboverviewdata\n  WHERE $__timeFilter(enddate)\n    AND ($var_alldata = true OR (usagequantity - prepayquantity) > 0)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\n) AS subquery\nWHERE\n  ('${partner:raw}' IN ('All','') OR customer_name LIKE REPLACE('${partner:raw}', '\\\\', '') || '/%')\n  AND ('${customerName}' = 'All' OR customer_name = '${customerName}')\nORDER BY enddate, licname;",
+          "refId": "Ventia",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ae6281k9mqa68b"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM (\n  SELECT\n    'QPC/Chemist Warehouse' AS customer_name,\n    licname,\n    unitofmeasuretype,\n    prepayquantity,\n    prepayquantity AS \"Contracted\",\n    usagequantity,\n    usagequantity - prepayquantity AS Overage,\n    startdate::text,\n    enddate::text,\n    to_char(date_trunc('month', startdate + (enddate - startdate) / 2), 'FMMonth, YYYY') AS \"Month, Year\"\n  FROM suboverviewdata\n  WHERE $__timeFilter(enddate)\n    AND ($var_alldata = true OR (usagequantity - prepayquantity) > 0)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\n) AS subquery\nWHERE\n  ('${partner:raw}' IN ('All','') OR customer_name LIKE REPLACE('${partner:raw}', '\\\\', '') || '/%')\n  AND ('${customerName}' = 'All' OR customer_name = '${customerName}')\nORDER BY enddate, licname;",
+          "refId": "Chemist Warehouse",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "eeicnln4u44xsc"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM (\n  SELECT\n    'QPC/The Lotteries Corporation' AS customer_name,\n    licname,\n    unitofmeasuretype,\n    prepayquantity,\n    prepayquantity AS \"Contracted\",\n    usagequantity,\n    usagequantity - prepayquantity AS Overage,\n    startdate::text,\n    enddate::text,\n    to_char(date_trunc('month', startdate + (enddate - startdate) / 2), 'FMMonth, YYYY') AS \"Month, Year\"\n  FROM suboverviewdata\n  WHERE $__timeFilter(enddate)\n    AND ($var_alldata = true OR (usagequantity - prepayquantity) > 0)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\n) AS subquery\nWHERE\n  ('${partner:raw}' IN ('All','') OR customer_name LIKE REPLACE('${partner:raw}', '\\\\', '') || '/%')\n  AND ('${customerName}' = 'All' OR customer_name = '${customerName}')\nORDER BY enddate, licname;",
+          "refId": "The Lotteries Corporation",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Panel Title",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "0"
+                  }
+                },
+                "fieldName": "prepayquantity"
+              },
+              {
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "0"
+                  }
+                },
+                "fieldName": "usagequantity"
+              }
+            ],
+            "match": "all",
+            "type": "exclude"
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "lowerOrEqual",
+                  "options": {
+                    "value": "0"
+                  }
+                },
+                "fieldName": "Overage"
+              },
+              {
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "false"
+                  }
+                },
+                "fieldName": "var_alldata1"
+              }
+            ],
+            "match": "all",
+            "type": "exclude"
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "Genesys Cloud Collaborate User"
+                  }
+                },
+                "fieldName": "licname"
+              },
+              {
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "Genesys Cloud Communicate User"
+                  }
+                },
+                "fieldName": "licname"
+              },
+              {
+                "config": {
+                  "id": "substring",
+                  "options": {
+                    "value": "Genesys Cloud CX"
+                  }
+                },
+                "fieldName": "licname"
+              }
+            ],
+            "match": "any",
+            "type": "include"
+          }
+        },
+        {
+          "disabled": true,
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "regex",
+                  "options": {
+                    "value": "^Genesys Cloud CX [1-3](?: (?i:concurrent))?$"
+                  }
+                },
+                "fieldName": "licname"
+              },
+              {
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "Genesys Cloud Collaborate User"
+                  }
+                },
+                "fieldName": "licname"
+              },
+              {
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "Genesys Cloud Communicate User"
+                  }
+                },
+                "fieldName": "licname"
+              }
+            ],
+            "match": "any",
+            "type": "include"
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "substring",
+                  "options": {
+                    "value": "Add-On"
+                  }
+                },
+                "fieldName": "licname"
+              }
+            ],
+            "match": "all",
+            "type": "exclude"
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Overage",
+            "binary": {
+              "left": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "usagequantity"
+                }
+              },
+              "operator": "-",
+              "right": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Contracted"
+                }
+              }
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": false
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Contracted": false,
+              "overage": true,
+              "unitofmeasuretype": true,
+              "var_alldata": true
+            },
+            "includeByName": {},
+            "indexByName": {
+              "Contracted": 7,
+              "Month, Year": 3,
+              "customer_name": 0,
+              "enddate": 2,
+              "licname": 4,
+              "overage": 9,
+              "prepayquantity": 6,
+              "startdate": 1,
+              "unitofmeasuretype": 5,
+              "usagequantity": 8
+            },
+            "renameByName": {
+              "Contracted": "",
+              "Month, Year": "Primary Date",
+              "Overage": "Overage",
+              "Overage $": "Overage @$12",
+              "customer_name": "Customer Name",
+              "enddate": "End Date",
+              "licname": "License Name",
+              "overage": "Overagex",
+              "prepayquantity": "Prepay",
+              "startdate": "Start Date",
+              "unitofmeasuretype": "Unit",
+              "usagequantity": "Usage"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "Customer Name"
+              }
+            ]
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "Start Date"
+              }
+            ]
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "License Name"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "adoq5ssgi1b0gb"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 23,
+        "w": 5,
+        "x": 19,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "adoq5ssgi1b0gb"
+          },
+          "editorMode": "builder",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM (\n  SELECT usagequantity AS \"CX 3\"\n  FROM suboverviewdata\n  WHERE $__timeFilter(startdate)\n    AND licname LIKE '%Genesys Cloud CX %'\n) AS subquery;",
+          "refId": "A"
+        }
+      ],
+      "title": "",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 29
+      },
+      "id": 999,
+      "panels": [],
+      "repeat": "customerName",
+      "title": "Per-Customer Row",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "grafana-mixed-datasource",
+        "uid": "-- Mixed --"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 30
+      },
+      "id": 102,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "timezone": [
+          "browser"
+        ],
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ae5wpbbz06ygwc"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_trunc('month', startdate) AS time,\n  'AFCA' AS customer_name,\n  SUM(usagequantity) AS usage\nFROM suboverviewdata\nWHERE $__timeFilter(startdate)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\nGROUP BY time\nORDER BY time;",
+          "refId": "AFCA_TS"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "bdqpk071i1728d"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_trunc('month', startdate) AS time,\n  'QPC/Anglicare' AS customer_name,\n  SUM(usagequantity) AS usage\nFROM suboverviewdata\nWHERE $__timeFilter(startdate)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\nGROUP BY time\nORDER BY time;",
+          "refId": "Anglicare_TS"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "cdgrx7c15i7lsd"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_trunc('month', startdate) AS time,\n  'Deakin' AS customer_name,\n  SUM(usagequantity) AS usage\nFROM suboverviewdata\nWHERE $__timeFilter(startdate)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\nGROUP BY time\nORDER BY time;",
+          "refId": "Deakin_TS"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "de5wqf53sh5vkb"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_trunc('month', startdate) AS time,\n  'JLL' AS customer_name,\n  SUM(usagequantity) AS usage\nFROM suboverviewdata\nWHERE $__timeFilter(startdate)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\nGROUP BY time\nORDER BY time;",
+          "refId": "JLL_TS"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "edwqkoupsohs0f"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_trunc('month', startdate) AS time,\n  'Luxury Escapes' AS customer_name,\n  SUM(usagequantity) AS usage\nFROM suboverviewdata\nWHERE $__timeFilter(startdate)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\nGROUP BY time\nORDER BY time;",
+          "refId": "LuxuryEscapes_TS"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ae5wnr5t9vmdcf"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_trunc('month', startdate) AS time,\n  'QPC/PICA' AS customer_name,\n  SUM(usagequantity) AS usage\nFROM suboverviewdata\nWHERE $__timeFilter(startdate)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\nGROUP BY time\nORDER BY time;",
+          "refId": "PICA_TS"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "adoq5ssgi1b0gb"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_trunc('month', startdate) AS time,\n  'QPC/Superloop' AS customer_name,\n  SUM(usagequantity) AS usage\nFROM suboverviewdata\nWHERE $__timeFilter(startdate)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\nGROUP BY time\nORDER BY time;",
+          "refId": "Superloop_TS"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ddwr43xciv2f4c"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_trunc('month', startdate) AS time,\n  'QPC/UniSuper' AS customer_name,\n  SUM(usagequantity) AS usage\nFROM suboverviewdata\nWHERE $__timeFilter(startdate)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\nGROUP BY time\nORDER BY time;",
+          "refId": "UniSuper_TS"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ee5wr8qj5upz4f"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_trunc('month', startdate) AS time,\n  'QPC/MYOB' AS customer_name,\n  SUM(usagequantity) AS usage\nFROM suboverviewdata\nWHERE $__timeFilter(startdate)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\nGROUP BY time\nORDER BY time;",
+          "refId": "MYOB_TS"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ae622ng7bez28e"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_trunc('month', startdate) AS time,\n  'Compassion' AS customer_name,\n  SUM(usagequantity) AS usage\nFROM suboverviewdata\nWHERE $__timeFilter(startdate)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\nGROUP BY time\nORDER BY time;",
+          "refId": "Compassion_TS"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "de624vkf17tvke"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_trunc('month', startdate) AS time,\n  'QPC/BAT APAC' AS customer_name,\n  SUM(usagequantity) AS usage\nFROM suboverviewdata\nWHERE $__timeFilter(startdate)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\nGROUP BY time\nORDER BY time;",
+          "refId": "BATAPAC_TS"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "be625522r8oaod"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_trunc('month', startdate) AS time,\n  'QPC/BAT Pakistan' AS customer_name,\n  SUM(usagequantity) AS usage\nFROM suboverviewdata\nWHERE $__timeFilter(startdate)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\nGROUP BY time\nORDER BY time;",
+          "refId": "BATPakistan_TS"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ee625ytbyl62od"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_trunc('month', startdate) AS time,\n  'QPC/Tabcorp' AS customer_name,\n  SUM(usagequantity) AS usage\nFROM suboverviewdata\nWHERE $__timeFilter(startdate)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\nGROUP BY time\nORDER BY time;",
+          "refId": "Tabcorp_TS"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ee626n16o8ikgc"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_trunc('month', startdate) AS time,\n  'Datacom/Lite n Easy' AS customer_name,\n  SUM(usagequantity) AS usage\nFROM suboverviewdata\nWHERE $__timeFilter(startdate)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\nGROUP BY time\nORDER BY time;",
+          "refId": "LiteNEasy_TS"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ee626u59wz9q8b"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_trunc('month', startdate) AS time,\n  'QPC/Ricoh Oceania' AS customer_name,\n  SUM(usagequantity) AS usage\nFROM suboverviewdata\nWHERE $__timeFilter(startdate)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\nGROUP BY time\nORDER BY time;",
+          "refId": "RicohOceania_TS"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ae6281k9mqa68b"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_trunc('month', startdate) AS time,\n  'QPC/Chemist Warehouse' AS customer_name,\n  SUM(usagequantity) AS usage\nFROM suboverviewdata\nWHERE $__timeFilter(startdate)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\nGROUP BY time\nORDER BY time;",
+          "refId": "CWH_TS"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ee628jzcnvx1cf"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_trunc('month', startdate) AS time,\n  'QPC/Compare The Market' AS customer_name,\n  SUM(usagequantity) AS usage\nFROM suboverviewdata\nWHERE $__timeFilter(startdate)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\nGROUP BY time\nORDER BY time;",
+          "refId": "CTM_TS"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fe629x1jsrp4wc"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_trunc('month', startdate) AS time,\n  'Ventia' AS customer_name,\n  SUM(usagequantity) AS usage\nFROM suboverviewdata\nWHERE $__timeFilter(startdate)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\nGROUP BY time\nORDER BY time;",
+          "refId": "Ventia_TS"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ae75j8a0x3f28c"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_trunc('month', startdate) AS time,\n  'Unity Water' AS customer_name,\n  SUM(usagequantity) AS usage\nFROM suboverviewdata\nWHERE $__timeFilter(startdate)\n    AND (\n      licname = 'Genesys Cloud Collaborate User' OR\n      licname = 'Genesys Cloud Communicate User' OR\n      licname LIKE '%Genesys Cloud CX%'\n    )\n    AND licname NOT LIKE '%Add-On%'\nGROUP BY time\nORDER BY time;",
+          "refId": "UnityWater_TS"
+        }
+      ],
+      "title": "License Usage per Customer per Month (All Datasources)",
+      "type": "timeseries"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 40,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "description": "",
+        "includeAll": true,
+        "label": "Data",
+        "name": "var_alldata",
+        "options": [
+          {
+            "selected": false,
+            "text": "All data",
+            "value": "true"
+          },
+          {
+            "selected": false,
+            "text": "Overage Only",
+            "value": "false"
+          }
+        ],
+        "query": "All data : true, Overage Only : false",
+        "type": "custom"
+      },
+      {
+        "current": {
+          "text": "All",
+          "value": "All"
+        },
+        "includeAll": false,
+        "label": "Partner Selector",
+        "name": "partner",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "All"
+          },
+          {
+            "selected": false,
+            "text": "Datacom",
+            "value": "Datacom\\"
+          },
+          {
+            "selected": false,
+            "text": "QPC",
+            "value": "QPC\\"
+          }
+        ],
+        "query": "All : All, Datacom : Datacom\\ , QPC : QPC\\",
+        "type": "custom"
+      },
+      {
+        "current": {
+          "text": "All",
+          "value": "All"
+        },
+        "definition": "SELECT c as value, c as text\nFROM (\n  VALUES\n    ('All'),\n    ('AFCA'),\n    ('Brickworks'),\n    ('QPC/Anglicare'),\n    ('Deakin'),\n    ('JLL'),\n    ('Luxury Escapes'),\n    ('QPC/PICA'),\n    ('QPC/Superloop'),\n    ('QPC/UniSuper'),\n    ('QPC/MYOB'),\n    ('Compassion'),\n    ('QPC/BAT APAC'),\n    ('QPC/BAT Pakistan'),\n    ('QPC/Tabcorp'),\n    ('Datacom/Lite n Easy'),\n    ('QPC/Ricoh Oceania'),\n    ('QPC/Chemist Warehouse'),\n    ('QPC/Compare The Market'),\n    ('QPC/The Lotteries Corporation'),\n    ('Ventia'),\n    ('Unity Water'),\n('Datacom/Communities')\n) as t(c)\nORDER BY 1",
+        "includeAll": false,
+        "label": "Customer Name",
+        "name": "customerName",
+        "options": [],
+        "query": "SELECT c as value, c as text\nFROM (\n  VALUES\n    ('All'),\n    ('AFCA'),\n    ('Brickworks'),\n    ('QPC/Anglicare'),\n    ('Deakin'),\n    ('JLL'),\n    ('Luxury Escapes'),\n    ('QPC/PICA'),\n    ('QPC/Superloop'),\n    ('QPC/UniSuper'),\n    ('QPC/MYOB'),\n    ('Compassion'),\n    ('QPC/BAT APAC'),\n    ('QPC/BAT Pakistan'),\n    ('QPC/Tabcorp'),\n    ('Datacom/Lite n Easy'),\n    ('QPC/Ricoh Oceania'),\n    ('QPC/Chemist Warehouse'),\n    ('QPC/Compare The Market'),\n    ('QPC/The Lotteries Corporation'),\n    ('Ventia'),\n    ('Unity Water'),\n('Datacom/Communities')\n) as t(c)\nORDER BY 1",
+        "regex": "",
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now/y",
+    "to": "now/y"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
+  "timezone": "browser",
+  "title": "Licensing: Genesys Adapter",
+  "uid": "ddoq5ym45q800a",
+  "version": 122,
+  "weekStart": ""
+}
